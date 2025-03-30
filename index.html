@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student DAO Platform</title>
+  <link rel="icon" href="Logo.jpg" type="image/x-icon">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #383a3b;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .welcome-container {
+      text-align: center;
+      z-index: 10;
+      background-color: rgba(255, 254, 254, 0);
+      padding: 40px;
+      border-radius: 15px;
+      
+     /* ? box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1); */
+      max-width: 500px;
+      width: 90%;
+    }
+    
+    h1 {
+      color: #ffffff;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+    }
+    
+    .btn {
+      padding: 12px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 50px;
+      background-color: rgba(63, 81, 181, 0.096);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-continue {
+      background-color: rgba(33, 150, 243, 0.89);
+    }
+    
+    .panel-selection {
+      display: none;
+      margin-top: 20px;
+      color: #ffffff;
+    }
+    
+    .particles-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    
+    .particle {
+      position: absolute;
+      background-color: rgba(222, 222, 222, 0.7);
+      border-radius: 50%;
+      animation: float 15s infinite linear;
+    }
+  </style>
+</head>
+<body>
+  <div class="particles-container" id="particles"></div>
+  
+  <div class="welcome-container">
+    <h1>Welcome to Student DAO Platform</h1>
+    
+    <div id="welcome-screen">
+      <button class="btn btn-continue" id="continue-btn">Continue</button>
+    </div>
+    
+    <div id="panel-selection" class="panel-selection">
+      <h2>Select your panel</h2>
+      <button class="btn" id="admin-btn">Admin Panel</button>
+      <button class="btn" id="student-btn">Student Panel</button>
+    </div>
+  </div>
+  
+  <script>
+    // Create sand-like particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50; // Low density
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random size between 2px and 6px
+        const size = Math.random() * 4 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 10;
+        particle.style.animation = `float ${duration}s ${delay}s infinite linear`;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    // Animation for particles
+    const styleSheet = document.styleSheets[0];
+    const floatKeyframes = `
+      @keyframes float {
+        0% {
+          transform: translate(0, 0);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.8;
+        }
+        90% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translate(${Math.random() > 0.5 ? '+' : '-'}${Math.random() * 100 + 50}px, ${Math.random() > 0.5 ? '+' : '-'}${Math.random() * 100 + 50}px);
+          opacity: 0;
+        }
+      }
+    `;
+    styleSheet.insertRule(floatKeyframes, styleSheet.cssRules.length);
+    
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      
+      const continueBtn = document.getElementById('continue-btn');
+      const welcomeScreen = document.getElementById('welcome-screen');
+      const panelSelection = document.getElementById('panel-selection');
+      const adminBtn = document.getElementById('admin-btn');
+      const studentBtn = document.getElementById('student-btn');
+      
+      continueBtn.addEventListener('click', function() {
+        welcomeScreen.style.display = 'none';
+        panelSelection.style.display = 'block';
+      });
+      
+      adminBtn.addEventListener('click', function() {
+        window.location.href = 'Admin.html';
+      });
+      
+      studentBtn.addEventListener('click', function() {
+        window.location.href = 'userDashBoard.html';
+      });
+    });
+  </script>
+</body>
+</html>

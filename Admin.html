@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student DAO Platform</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8f9fa;
+      padding: 20px;
+      transition: background-color 0.5s ease;
+      background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(245, 247, 250, 0.85);
+      z-index: -1;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 800px;
+      margin: 40px auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transform: translateY(0);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(to bottom, #3f51b5, #2196f3);
+    }
+
+    .container:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    }
+
+    h2 {
+      text-align: center;
+      position: relative;
+      padding-bottom: 15px;
+      color: #2c3e50;
+      font-weight: 600;
+      margin-top: 10px;
+      margin-bottom: 25px;
+    }
+
+    h2:after {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(to right, #3f51b5, #2196f3);
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: width 0.4s ease;
+      border-radius: 2px;
+    }
+
+    h2:hover:after {
+      width: 120px;
+    }
+
+    h3 {
+      color: #3f51b5;
+      font-weight: 500;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
+    }
+
+    h3::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, #3f51b5, transparent);
+      transform: scaleX(0.3);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    h3:hover::after {
+      transform: scaleX(1);
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 25px auto;
+      padding: 15px;
+      border: 2px dashed #bdc3c7;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+      width: 80%;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    input[type="file"]:hover {
+      border-color: #3f51b5;
+      background: #f1f3f9;
+      transform: scale(1.02);
+    }
+
+    button {
+      background: linear-gradient(135deg, #3f51b5, #2196f3);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #3949ab, #1e88e5);
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(33, 150, 243, 0.4);
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 5px rgba(33, 150, 243, 0.4);
+    }
+
+    button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    button:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(100, 100);
+        opacity: 0;
+      }
+    }
+
+    #walletAddress {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: 500;
+      transition: all 0.4s ease;
+      padding: 10px;
+      border-radius: 6px;
+      background: #f8f9fa;
+      display: inline-block;
+      margin-left: auto;
+      margin-right: auto;
+      width: auto;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #walletAddress:not(:empty) {
+      color: #3f51b5;
+      animation: fadeInUp 0.6s ease-in-out;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      border-left: 3px solid #3f51b5;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+    
+    .module {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .module.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: fadeInModule 0.5s ease-out;
+    }
+    
+    @keyframes fadeInModule {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .module-selector {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 25px 0;
+    }
+    
+    .module-btn {
+      background: white;
+      color: #3f51b5;
+      border: 2px solid #e0e0e0;
+      padding: 10px 20px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      box-shadow: none;
+    }
+    
+    .module-btn:hover {
+      border-color: #3f51b5;
+      background: #f5f7ff;
+      transform: translateY(-3px);
+    }
+    
+    .module-btn.active {
+      background: #3f51b5;
+      color: white;
+      border-color: #3f51b5;
+    }
+    
+    .column-mapping {
+      margin: 25px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      transform: translateY(0);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-left: 4px solid #3f51b5;
+    }
+    
+    .column-mapping:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+    }
+    
+    .column-mapping div {
+      margin: 15px 0;
+    }
+    
+    .column-mapping select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: white;
+      transition: all 0.3s ease;
+    }
+    
+    .column-mapping select:focus {
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+      outline: none;
+    }
+    
+    .csv-preview {
+      margin: 25px 0;
+      overflow-x: auto;
+      border-radius: 8px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+      background: white;
+      transition: all 0.3s ease;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .csv-preview:hover {
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+    
+    .csv-preview table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .csv-preview th, .csv-preview td {
+      border: 1px solid #e0e0e0;
+      padding: 12px;
+      text-align: left;
+    }
+    
+    .csv-preview th {
+      background-color: #f1f3f9;
+      color: #3f51b5;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+    }
+    
+    .csv-preview tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    
+    .csv-preview tr:hover {
+      background-color: #f1f3f9;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border-left: 4px solid #3f51b5;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .card h4 {
+      color: #3f51b5;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+    
+    .error {
+      color: #e53935;
+      margin-top: 8px;
+      padding: 8px;
+      background: rgba(229, 57, 53, 0.1);
+      border-radius: 4px;
+      font-size: 14px;
+      animation: shake 0.5s ease-in-out;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+    
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+    
+    textarea:focus, input[type="text"]:focus, input[type="number"]:focus {
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+      outline: none;
+      background: white;
+    }
+    
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    label {
+      font-weight: 500;
+      color: #2c3e50;
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #7f8c8d;
+      position: relative;
+    }
+    
+    .loading:after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(63, 81, 181, 0.3);
+      border-radius: 50%;
+      border-top-color: #3f51b5;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 20px;
+      }
+      
+      .module-selector {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h2>Student DAO Platform</h2>
+
+    <button id="connectWalletBtn">🔗 Connect MetaMask Wallet</button>
+    <p id="walletAddress">Not Connected</p>
+    
+    <div class="module-selector" id="moduleSelector" style="display: none;">
+      <button class="module-btn" id="adminCreditsBtn">Admin Credits</button>
+      <button class="module-btn" id="governanceBtn">DAO Governance</button>
+    </div>
+
+    <!-- Admin Credits Module -->
+    <div id="adminCreditsModule" class="module">
+      <h3>Upload Student CSV & Mint Credits</h3>
+      <input type="file" id="csvFile" accept=".csv">
+      
+      <div id="columnMapping" class="column-mapping" style="display: none;">
+        <h3>Map CSV Columns</h3>
+        <div>
+          <label for="nameColumn">Student Name Column:</label>
+          <select id="nameColumn"></select>
+        </div>
+        <div>
+          <label for="walletColumn">Wallet Address Column:</label>
+          <select id="walletColumn"></select>
+        </div>
+        <div>
+          <label for="creditsColumn">Credits Column:</label>
+          <select id="creditsColumn"></select>
+        </div>
+      </div>
+
+      <div id="csvPreview" class="csv-preview"></div>
+      
+      <button id="mintCreditsBtn" style="display: none;">Mint Credits</button>
+    </div>
+
+    <!-- Governance Module -->
+    <div id="governanceModule" class="module">
+      <h3>Student DAO Governance</h3>
+      
+      <div class="card">
+        <h4>Your Information</h4>
+        <div id="userInfo">
+          <div id="creditsInfo">Loading your voting credits...</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Create Proposal</h4>
+        <div id="proposalForm">
+          <label for="proposalTitle">Title</label>
+          <input type="text" id="proposalTitle" placeholder="Enter proposal title">
+          
+          <label for="proposalDescription">Description</label>
+          <textarea id="proposalDescription" placeholder="Describe your proposal in detail"></textarea>
+          
+          <label for="proposalDuration">Duration (minutes)</label>
+          <input type="number" id="proposalDuration" min="1" value="60">
+          
+          <button id="createProposalBtn">Create Proposal</button>
+          <div id="createProposalError" class="error"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Active Proposals</h4>
+        <div id="proposalsList">
+          <div class="loading">Loading proposals...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+
+  <script>
+    // Contract details
+    const CREDITS_CONTRACT_ADDRESS = "0x93b2c685acd611f0886e6655834a55fd10db70e4";
+    const GOVERNANCE_CONTRACT_ADDRESS = "0x0759bD84C032630eC7a848443DFd89416063fA30";
+    
+    const CREDITS_ABI = [
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "address",
+            "name": "studentWallet",
+            "type": "address"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "credits",
+            "type": "uint256"
+          }
+        ],
+        "name": "CreditsMinted",
+        "type": "event"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "studentWallet",
+            "type": "address"
+          }
+        ],
+        "name": "getCredits",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "credits",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "studentWallet",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "credits",
+            "type": "uint256"
+          }
+        ],
+        "name": "mintCredits",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "students",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "credits",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ];
+    
+    const GOVERNANCE_ABI = [
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "durationInMinutes",
+            "type": "uint256"
+          }
+        ],
+        "name": "createProposal",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "proposalId",
+            "type": "uint256"
+          }
+        ],
+        "name": "executeProposal",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "proposalId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "support",
+            "type": "bool"
+          }
+        ],
+        "name": "vote",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "proposalId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getProposal",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "yesVotes",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "noVotes",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "executed",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ];
+
+    let web3;
+    let creditsContract;
+    let governanceContract;
+    let currentAccount = null;
+    
+    // Variables for CSV processing
+    let rawData = [];
+    let columns = [];
+    let mappedData = [];
+    
+    // Column mapping selections
+    let selectedNameColumn = '';
+    let selectedWalletColumn = '';
+    let selectedCreditsColumn = '';
+
+    // Initialize the app when the page loads
+    window.addEventListener('load', async () => {
+      // Check if MetaMask is installed
+      if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
+        
+        // Check if already connected
+        try {
+          const accounts = await ethereum.request({ method: 'eth_accounts' });
+          if (accounts.length > 0) {
+            currentAccount = accounts[0];
+            onWalletConnected();
+          }
+        } catch (error) {
+          console.error("Error checking accounts:", error);
+        }
+        
+        // Listen for account changes
+        window.ethereum.on('accountsChanged', (accounts) => {
+          if (accounts.length > 0) {
+            currentAccount = accounts[0];
+            onWalletConnected();
+          } else {
+            currentAccount = null;
+            document.getElementById('walletAddress').innerText = 'Not Connected';
+            document.getElementById('moduleSelector').style.display = 'none';
+            hideAllModules();
+          }
+        });
+      } else {
+        alert('MetaMask is not installed. Please install MetaMask to use this application.');
+        document.getElementById('connectWalletBtn').disabled = true;
+      }
+    });
+
+    async function connectWallet() {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          currentAccount = accounts[0];
+          onWalletConnected();
+        } catch (error) {
+          console.error("Connection error:", error);
+          alert('Error connecting wallet: ' + error.message);
+        }
+      } else {
+        alert('MetaMask is not installed. Please install MetaMask to use this application.');
+      }
+    }
+    
+    function onWalletConnected() {
+      // Initialize contracts
+      creditsContract = new web3.eth.Contract(CREDITS_ABI, CREDITS_CONTRACT_ADDRESS);
+      governanceContract = new web3.eth.Contract(GOVERNANCE_ABI, GOVERNANCE_CONTRACT_ADDRESS);
+      
+      // Update UI
+      document.getElementById('walletAddress').innerText = 'Connected: ' + currentAccount;
+      document.getElementById('moduleSelector').style.display = 'flex';
+      
+      // Load user credits
+      loadCredits(currentAccount);
+    }
+    
+    function hideAllModules() {
+      document.getElementById('adminCreditsModule').classList.remove('active');
+      document.getElementById('governanceModule').classList.remove('active');
+    }
+    
+    function showModule(moduleId) {
+      hideAllModules();
+      document.getElementById(moduleId).classList.add('active');
+    }
+
+    async function loadCredits(studentWallet) {
+      if (!creditsContract) return;
+      
+      try {
+        const result = await creditsContract.methods.getCredits(studentWallet).call();
+        document.getElementById('creditsInfo').innerText = `Name: ${result.name}, Credits: ${result.credits}`;
+      } catch (error) {
+        console.error("Error fetching credits:", error);
+        document.getElementById('creditsInfo').innerText = 'Error fetching credits: ' + error.message;
+      }
+    }
+
+    document.getElementById("csvFile").addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        Papa.parse(file, {
+          header: true,
+          skipEmptyLines: true,
+          complete: function (results) {
+            rawData = results.data;
+            columns = results.meta.fields;
+            
+            // Display column mapping options
+            setupColumnMapping(columns);
+            
+            // Show CSV preview
+            displayCSVPreview(rawData, columns);
+            
+            // Show mapping section and mint button
+            document.getElementById("columnMapping").style.display = "block";
+            document.getElementById("mintCreditsBtn").style.display = "block";
+          }
+        });
+      }
+    });
+
+    function setupColumnMapping(columns) {
+      const nameSelect = document.getElementById("nameColumn");
+      const walletSelect = document.getElementById("walletColumn");
+      const creditsSelect = document.getElementById("creditsColumn");
+      
+      // Clear existing options
+      nameSelect.innerHTML = "";
+      walletSelect.innerHTML = "";
+      creditsSelect.innerHTML = "";
+      
+      // Add options for each column
+      columns.forEach(column => {
+        const nameOption = document.createElement("option");
+        nameOption.value = column;
+        nameOption.textContent = column;
+        nameSelect.appendChild(nameOption.cloneNode(true));
+        
+        const walletOption = document.createElement("option");
+        walletOption.value = column;
+        walletOption.textContent = column;
+        walletSelect.appendChild(walletOption.cloneNode(true));
+        
+        const creditsOption = document.createElement("option");
+        creditsOption.value = column;
+        creditsOption.textContent = column;
+        creditsSelect.appendChild(creditsOption.cloneNode(true));
+      });
+      
+      // Try to auto-select appropriate columns based on common names
+      autoSelectColumns(columns, nameSelect, walletSelect, creditsSelect);
+      
+      // Add event listeners for selection changes
+      nameSelect.addEventListener("change", updateMappedData);
+      walletSelect.addEventListener("change", updateMappedData);
+      creditsSelect.addEventListener("change", updateMappedData);
+      
+      // Initialize with current selections
+      selectedNameColumn = nameSelect.value;
+      selectedWalletColumn = walletSelect.value;
+      selectedCreditsColumn = creditsSelect.value;
+      
+      updateMappedData();
+    }
+    
+    function autoSelectColumns(columns, nameSelect, walletSelect, creditsSelect) {
+      // Common patterns for column names
+      const namePatterns = ["name", "student", "student name", "studentname"];
+      const walletPatterns = ["wallet", "address", "walletaddress", "wallet address", "ethereum", "eth"];
+      const creditsPatterns = ["credit", "credits", "point", "points", "token", "tokens"];
+      
+      // Try to find and select appropriate columns
+      for (const col of columns) {
+        const lowerCol = col.toLowerCase();
+        
+        // Check for name column
+        if (namePatterns.some(pattern => lowerCol.includes(pattern))) {
+          nameSelect.value = col;
+          selectedNameColumn = col;
+        }
+        
+        // Check for wallet column
+        if (walletPatterns.some(pattern => lowerCol.includes(pattern))) {
+          walletSelect.value = col;
+          selectedWalletColumn = col;
+        }
+        
+        // Check for credits column
+        if (creditsPatterns.some(pattern => lowerCol.includes(pattern))) {
+          creditsSelect.value = col;
+          selectedCreditsColumn = col;
+        }
+      }
+    }
+    
+    function updateMappedData() {
+      selectedNameColumn = document.getElementById("nameColumn").value;
+      selectedWalletColumn = document.getElementById("walletColumn").value;
+      selectedCreditsColumn = document.getElementById("creditsColumn").value;
+      
+      mappedData = rawData.map(row => ({
+        name: row[selectedNameColumn],
+        walletAddress: row[selectedWalletColumn],
+        credits: row[selectedCreditsColumn]
+      }));
+      
+      console.log("Mapped data:", mappedData);
+    }
+
+    function displayCSVPreview(data, columns) {
+      const preview = document.getElementById("csvPreview");
+      
+      if (data.length === 0) {
+        preview.innerHTML = "<p>No data found in CSV</p>";
+        return;
+      }
+      
+      let tableHTML = "<table><thead><tr>";
+      
+      // Add headers
+      columns.forEach(column => {
+        tableHTML += `<th>${column}</th>`;
+      });
+      
+      tableHTML += "</tr></thead><tbody>";
+      
+      // Add first 5 rows of data (or fewer if less data available)
+      const rowsToShow = Math.min(5, data.length);
+      
+      for (let i = 0; i < rowsToShow; i++) {
+        tableHTML += "<tr>";
+        columns.forEach(column => {
+          tableHTML += `<td>${data[i][column] || ""}</td>`;
+        });
+        tableHTML += "</tr>";
+      }
+      
+      tableHTML += "</tbody></table>";
+      
+      if (data.length > 5) {
+        tableHTML += `<p>Showing 5 of ${data.length} rows</p>`;
+      }
+      
+      preview.innerHTML = tableHTML;
+    }
+
+    // Updated to process all students with mapped columns
+    async function mintCreditsForAll() {
+      if (!creditsContract) {
+        alert("Please connect your wallet first!");
+        return;
+      }
+
+      if (mappedData.length === 0) {
+        alert("Please upload a CSV file and map columns first!");
+        return;
+      }
+      
+      let successCount = 0;
+      let failCount = 0;
+
+      for (const student of mappedData) {
+        const result = await mintCreditsSingle(
+          student.name, 
+          student.walletAddress, 
+          student.credits
+        );
+        
+        if (result) {
+          successCount++;
+        } else {
+          failCount++;
+        }
+      }
+
+      alert(`Minting process completed!\nSuccessful: ${successCount}\nFailed: ${failCount}`);
+    }
+
+    async function mintCreditsSingle(studentName, walletAddress, credits) {
+      // Validate inputs
+      if (!web3.utils.isAddress(walletAddress)) {
+        console.error(`❌ Invalid wallet address: ${walletAddress}`);
+        return false;
+      }
+
+      if (!studentName || typeof studentName !== "string" || studentName.trim() === "") {
+        console.error(`❌ Invalid name for wallet ${walletAddress}`);
+        return false;
+      }
+
+      const parsedCredits = parseInt(credits);
+      if (isNaN(parsedCredits) || parsedCredits <= 0) {
+        console.error(`❌ Invalid credit value for wallet ${walletAddress}: ${credits}`);
+        return false;
+      }
+
+      try {
+        console.log("Calling mintCredits with:", walletAddress, studentName, parsedCredits);
+        const tx = await creditsContract.methods.mintCredits(walletAddress, studentName, parsedCredits).send({ from: currentAccount });
+        console.log(`✅ Minted ${parsedCredits} credits for ${studentName}`);
+        return true;
+      } catch (err) {
+        console.error(`❌ Error minting for ${studentName}:`, err);
+        return false;
+      }
+    }
+    
+    // Governance functions
+    async function createProposal() {
+      const title = document.getElementById('proposalTitle').value;
+      const description = document.getElementById('proposalDescription').value;
+      const duration = document.getElementById('proposalDuration').value;
+      
+      if (!title || !description || !duration) {
+        document.getElementById('createProposalError').innerText = 'Please fill all fields';
+        return;
+      }
+      
+      try {
+        await governanceContract.methods.createProposal(title, description, duration).send({ from: currentAccount });
+        alert('Proposal created successfully!');
+        // Reset form
+        document.getElementById('proposalTitle').value = '';
+        document.getElementById('proposalDescription').value = '';
+        document.getElementById('proposalDuration').value = '60';
+        document.getElementById('createProposalError').innerText = '';
+      } catch (error) {
+        console.error('Error creating proposal:', error);
+        document.getElementById('createProposalError').innerText = 'Error creating proposal: ' + error.message;
+      }
+    }
+
+    // Event listeners
+    document.getElementById("connectWalletBtn").addEventListener("click", connectWallet);
+    document.getElementById("mintCreditsBtn").addEventListener("click", mintCreditsForAll);
+    document.getElementById("createProposalBtn").addEventListener("click", createProposal);
+    
+    // Module selection
+    document.getElementById("adminCreditsBtn").addEventListener("click", () => showModule('adminCreditsModule'));
+    document.getElementById("governanceBtn").addEventListener("click", () => showModule('governanceModule'));
+    
+    async function refreshData() {
+            if (provider && contract && currentAccount) {
+                await loadProposals();
+            }
+        }
+
+        // Load all proposals
+        async function loadProposals() {
+            try {
+                const proposalCount = await contract.proposalCount();
+                const proposalsList = document.getElementById('proposalsList');
+                
+                if (parseInt(proposalCount) === 0) {
+                    proposalsList.innerHTML = '<p>No proposals have been created yet.</p>';
+                    return;
+                }
+                
+                // Clear existing proposals
+                proposalsList.innerHTML = '';
+                
+                // Load each proposal
+                for (let i = 1; i <= proposalCount; i++) {
+                    const proposal = await contract.getProposal(i);
+                    const hasVoted = await contract.hasVoted(currentAccount, i);
+                    
+                    const proposalElement = createProposalElement(i, proposal, hasVoted);
+                    proposalsList.appendChild(proposalElement);
+                }
+            } catch (error) {
+                console.error("Error loading proposals:", error);
+                document.getElementById('proposalsList').innerHTML = `<p class="error">Error loading proposals: ${error.message}</p>`;
+            }
+        }
+  </script>
+</body>
+</html>
